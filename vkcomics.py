@@ -28,12 +28,12 @@ def post_image_to_server(image_url, comics_name, upload_url):
     return response.json()
 
 
-def post_image_to_album(server_post_response, access_token, api_version):
+def post_image_to_album(hash, server_id, photo, access_token, api_version):
     url = "https://api.vk.com/method/photos.saveWallPhoto"
     params = {
-        "server": server_post_response["server"],
-        "photo": server_post_response["photo"],
-        "hash": server_post_response["hash"],
+        "server": server_id,
+        "photo": photo,
+        "hash": hash,
         "access_token": access_token,
         "v": api_version
     }
@@ -42,9 +42,7 @@ def post_image_to_album(server_post_response, access_token, api_version):
     return response.json()
 
 
-def post_image_to_wall(album_post_response, api_version, commics_message):
-    owner_id = album_post_response["response"][0]["owner_id"]
-    media_id = album_post_response["response"][0]["id"]
+def post_image_to_wall(owner_id, media_id, api_version, commics_message):
     url = "https://api.vk.com/method/wall.post"
     params = {"access_token": access_token,
               "v": api_version,
@@ -85,12 +83,20 @@ if __name__ == "__main__":
     image_url = comics_response["img"]
 
     comics_name = comics_response["safe_title"]
+
     server_post_response = post_image_to_server(
         image_url, comics_name, upload_url)
+
+    server_post_hash = server_post_response["hash"]
+    server_post_photo = server_post_response["photo"]
+    server_post_id = server_post_response["server"]
+
     album_post_response = post_image_to_album(
-        server_post_response, access_token, api_version)
+        server_post_hash, server_post_id, server_post_photo, access_token, api_version)
     commics_message = comics_response["alt"]
+    owner_id = album_post_response["response"][0]["owner_id"]
+    media_id = album_post_response["response"][0]["id"]
 
 
     print(post_image_to_wall(
-        album_post_response, api_version, commics_message))
+        owner_id, media_id, api_version, commics_message))
