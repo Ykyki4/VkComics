@@ -6,12 +6,6 @@ from pathlib import Path, PurePath
 from environs import Env
 
 
-def get_image_url(comics_url):
-    response = requests.get(comics_url)
-    response.raise_for_status()
-    return response.json()
-
-
 def post_image_to_server(image_url, comics_name, upload_url):
     response = requests.get(image_url)
     response.raise_for_status()
@@ -71,20 +65,25 @@ if __name__ == "__main__":
     env = Env()
     env.read_env()
     client_id = env("CLIENT_ID")
-    access_token = env("ACCESS_TOKEN")
+    access_token = env("VK_ACCESS_TOKEN")
     api_version = 5.131
 
     comics_url = f"https://xkcd.com/{random.randrange(1, 999)}/info.0.json"
+
+    response = requests.get(comics_url)
+    response.raise_for_status()
+    comics_response = response.json()
+
     upload_url = request_upload_url(
         access_token, api_version)["response"]["upload_url"]
-    image_url = get_image_url(comics_url)["img"]
+    image_url = comics_response["img"]
 
-    comics_name = get_image_url(comics_url)["safe_title"]
+    comics_name = comics_response["safe_title"]
     server_post_response = post_image_to_server(
         image_url, comics_name, upload_url)
     album_post_response = post_image_to_album(
         server_post_response, access_token, api_version)
-    commics_message = get_image_url(comics_url)["alt"]
-
+    commics_message = comics_response["alt"]
+    
     print(post_image_to_wall(
         album_post_response, api_version, commics_message))
