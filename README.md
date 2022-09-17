@@ -4,7 +4,7 @@
 
 Дабы установить скрипт, следует установить [Python3](https://dvmn.org/encyclopedia/what-you-need-to-know/python_basics_install_python/), затем прописать эту комманду в терминал, чтобы установить все зависимые пакеты проекта:
 
-> pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 Также вам нужно установить эти переменные окружения:
 * CLIENT_ID - ид вашего приложения в вк.
