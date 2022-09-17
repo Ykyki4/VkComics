@@ -6,7 +6,7 @@ from pathlib import Path, PurePath
 from environs import Env
 
 
-def post_image_to_server(image_url, comics_name, upload_url):
+def download_comics_image(image_url, comics_name):
     response = requests.get(image_url)
     response.raise_for_status()
     filename = f"{comics_name}.png"
@@ -14,11 +14,17 @@ def post_image_to_server(image_url, comics_name, upload_url):
     path = PurePath("images", filename)
     with open(path, 'wb') as file:
         file.write(response.content)
-    with open(path, 'rb') as file:
-        files = {"photo": file}
-        response = requests.post(upload_url, files=files)
-        response.raise_for_status()
-    os.remove(path)
+        return path
+
+def post_image_to_server(image_url, comics_name, upload_url):
+    try:
+        path = download_comics_image(image_url, comics_name)
+        with open(path, 'rb') as file:
+            files = {"photo": file}
+            response = requests.post(upload_url, files=files)
+            response.raise_for_status()
+    finally:
+        os.remove(path)
     return response.json()
 
 
@@ -84,6 +90,7 @@ if __name__ == "__main__":
     album_post_response = post_image_to_album(
         server_post_response, access_token, api_version)
     commics_message = comics_response["alt"]
-    
+
+
     print(post_image_to_wall(
         album_post_response, api_version, commics_message))
