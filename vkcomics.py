@@ -42,12 +42,12 @@ def post_image_to_album(hash, server_id, photo, access_token, api_version):
     return response.json()
 
 
-def post_image_to_wall(owner_id, media_id, api_version, commics_message):
+def post_image_to_wall(group_to_post, owner_id, media_id, api_version, commics_message):
     url = "https://api.vk.com/method/wall.post"
     params = {"access_token": access_token,
               "v": api_version,
               "attachments": f"photo{owner_id}_{media_id}",
-              "owner_id": -215997139,
+              "owner_id": group_to_post,
               "from_group": 1,
               "message": commics_message
     }
@@ -70,6 +70,7 @@ if __name__ == "__main__":
     env.read_env()
     client_id = env("CLIENT_ID")
     access_token = env("VK_ACCESS_TOKEN")
+    group_to_post = env("GROUP_TO_POST")
     api_version = 5.131
 
     comics_url = f"https://xkcd.com/{random.randrange(1, 999)}/info.0.json"
@@ -99,4 +100,4 @@ if __name__ == "__main__":
 
 
     print(post_image_to_wall(
-        owner_id, media_id, api_version, commics_message))
+        group_to_post, owner_id, media_id, api_version, commics_message))
