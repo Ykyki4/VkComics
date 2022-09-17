@@ -62,7 +62,7 @@ def request_upload_url(access_token, api_version):
               "v": api_version}
     response = requests.get(url, params=params)
     response.raise_for_status()
-    return response.json()
+    return response.json()["response"]["upload_url"]
 
 
 if __name__ == "__main__":
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     comics_response = response.json()
 
     upload_url = request_upload_url(
-        access_token, api_version)["response"]["upload_url"]
+        access_token, api_version)
     image_url = comics_response["img"]
 
     comics_name = comics_response["safe_title"]
