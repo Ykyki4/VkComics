@@ -16,9 +16,8 @@ def download_comics_image(image_url, comics_name):
         file.write(response.content)
         return path
 
-def post_image_to_server(image_url, comics_name, upload_url):
+def post_image_to_server(path, upload_url):
     try:
-        path = download_comics_image(image_url, comics_name)
         with open(path, 'rb') as file:
             files = {"photo": file}
             response = requests.post(upload_url, files=files)
@@ -84,9 +83,10 @@ if __name__ == "__main__":
     image_url = comics_response["img"]
 
     comics_name = comics_response["safe_title"]
+    comics_image_path = download_comics_image(image_url, comics_name)
 
     server_post_response = post_image_to_server(
-        image_url, comics_name, upload_url)
+        comics_image_path, upload_url)
 
     server_post_hash = server_post_response["hash"]
     server_post_photo = server_post_response["photo"]
