@@ -67,7 +67,6 @@ def request_upload_url(access_token, api_version):
 if __name__ == "__main__":
     env = Env()
     env.read_env()
-    client_id = env("CLIENT_ID")
     access_token = env("VK_ACCESS_TOKEN")
     group_id = env("GROUP_ID")
     api_version = 5.131
