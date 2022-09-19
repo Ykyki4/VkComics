@@ -27,12 +27,12 @@ def post_image_to_server(path, upload_url):
     return response.json()
 
 
-def post_image_to_album(hash, server_id, photo, access_token, api_version):
+def post_image_to_album(image_hash, server_id, photo, access_token, api_version):
     url = "https://api.vk.com/method/photos.saveWallPhoto"
     params = {
         "server": server_id,
         "photo": photo,
-        "hash": hash,
+        "hash": image_hash,
         "access_token": access_token,
         "v": api_version
     }
