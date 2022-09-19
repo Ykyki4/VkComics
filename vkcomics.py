@@ -48,7 +48,7 @@ def post_image_to_wall(group_id, owner_id, media_id, api_version, commics_messag
         "access_token": access_token,
         "v": api_version,
         "attachments": f"photo{owner_id}_{media_id}",
-        "owner_id": group_id,
+        "owner_id": -group_id,
         "from_group": 1,
         "message": commics_message
     }
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     env = Env()
     env.read_env()
     access_token = env("VK_ACCESS_TOKEN")
-    group_id = env("GROUP_ID")
+    group_id = env.int("GROUP_ID")
     api_version = 5.131
 
     comics_url = f"https://xkcd.com/{random.randrange(1, 999)}/info.0.json"
